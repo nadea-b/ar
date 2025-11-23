@@ -369,10 +369,10 @@
       }
 
       const butterfly3 = document.getElementById('butterfly3');
-if (butterfly3) {
-    butterfly3.addEventListener('mousedown', handleButterfly3Click);
-    butterfly3.addEventListener('touchstart', handleButterfly3Click);
-}
+      if (butterfly3) {
+        butterfly3.addEventListener('mousedown', handleButterfly3Click);
+        butterfly3.addEventListener('touchstart', handleButterfly3Click);
+      }
 
       const box1 = document.getElementById('box1');
       if (box1) {
@@ -390,8 +390,9 @@ if (butterfly3) {
 
       const box3 = document.getElementById('box3');
       if (box3) {
-        box3.addEventListener('mousedown', handleBox3Click);
-        box3.addEventListener('touchstart', handleBox3Click);
+        box3.addEventListener('mousedown', () => {
+          box3.setAttribute('animation', 'property: rotation; to: 0 10 0; dur: 200; dir: alternate; loop: 2');
+        });
       }
 
       const unitedButterflies = document.getElementById('united-butterflies');
