@@ -124,6 +124,7 @@
     renderer="logarithmicDepthBuffer: true; precision: high;"
     embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    style="width: 100vw; height: 100vh;"
   >
     <a-assets timeout="10000">
       <a-asset-item id="butterfly1Model" src="./butterfly1.glb"></a-asset-item>
@@ -256,7 +257,7 @@
     ></a-text>
     </a-nft>
 
-    <a-entity camera look-controls-enabled="false">
+    <a-entity camera="fov: 50; near: 0.1; far: 1000" look-controls-enabled="false">
       <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
     </a-entity>
     
