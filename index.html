@@ -4,8 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Secret Garden's Lost Butterflies</title>
-  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <!-- AR.js for A-Frame (marker-based AR) -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+  
   
   <style>
     .arjs-loader {
@@ -28,23 +32,6 @@
       color: white;
       font-family: 'Arial', sans-serif;
       margin: 10px;
-    }
-
-    .progress-bar {
-      width: 80%;
-      max-width: 300px;
-      height: 20px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 10px;
-      margin-top: 20px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
-      width: 0%;
-      transition: width 0.5s ease;
     }
 
     .hud-overlay {
@@ -89,12 +76,19 @@
       font-family: 'Arial', sans-serif;
     }
 
-    .celebration {
+    .instructions {
       position: fixed;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 999;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: #FFD700;
+      padding: 15px 25px;
+      border-radius: 15px;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      z-index: 1000;
+      max-width: 90%;
     }
   </style>
 </head>
@@ -104,317 +98,177 @@
   <div class="arjs-loader">
     <div>🦋 The Secret Garden's Lost Butterflies 🦋</div>
     <div>Loading magical experience...</div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
   </div>
 
   <!-- HUD Overlay for Progress -->
   <div class="hud-overlay" id="hudOverlay">
-    <div id="hudText">Find the first flower...</div>
+    <div id="hudText">Scan a flower to begin...</div>
     <div style="margin-top: 10px; font-size: 0.9em;" id="hudProgress">Progress: 0/3</div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    📱 Point camera at flower markers<br>
+    👆 Tap butterflies to interact
   </div>
 
   <!-- Locked Message -->
   <div class="locked-message" id="lockedMessage">
-    🔒 This flower is locked!<br>
+    This flower is locked!<br>
     <span style="font-size: 0.8em; margin-top: 10px; display: block;">Find the previous flowers first</span>
   </div>
 
   <!-- A-Frame Scene -->
   <a-scene
-    vr-mode-ui="enabled: false;"
+    vr-mode-ui="enabled: false"
     renderer="logarithmicDepthBuffer: true; precision: high;"
     embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-    gesture-detector
   >
+    <a-assets timeout="10000">
+      <a-asset-item id="butterfly1Model" src="./butterfly1.glb"></a-asset-item>
+      <a-asset-item id="butterfly2Model" src="./butterfly2.glb"></a-asset-item>
+      <a-asset-item id="butterfly3Model" src="./butterfly3.glb"></a-asset-item>
+    </a-assets>
     
-    <!-- ============================================ -->
-    <!-- FLOWER 1: Pink Flowers with Black Butterfly -->
-    <!-- ============================================ -->
-    <a-nft
-      type="nft"
-      url="flower1"
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance=".01"
-      smoothThreshold="5"
-      id="flower1-marker"
+    <a-nft 
+    type="nft" 
+    url="./markers/flower1"
+    id="flower1-marker"
     >
-      <!-- Fixed container for stability -->
-      <a-entity id="flower1-content" position="0 0 0">
-        
-        <!-- Animated Butterfly -->
-        <a-entity 
-          id="butterfly1"
-          class="clickable"
-          position="0 0.8 0"
-          animation="property: position; to: 0.3 1.2 0; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate"
-          animation__rotate="property: rotation; to: 0 360 0; dur: 10000; easing: linear; loop: true"
-        >
-          <!-- Butterfly body -->
-          <a-cylinder color="#2C3E50" height="0.2" radius="0.03" position="0 0 0"></a-cylinder>
-          <!-- Left wing -->
-          <a-triangle color="#FF1493" scale="0.25 0.25 0.25" position="-0.15 0 0" rotation="0 0 30"></a-triangle>
-          <a-circle color="#C71585" radius="0.1" position="-0.2 0.05 0.01"></a-circle>
-          <!-- Right wing -->
-          <a-triangle color="#FF1493" scale="0.25 0.25 0.25" position="0.15 0 0" rotation="0 0 -30"></a-triangle>
-          <a-circle color="#C71585" radius="0.1" position="0.2 0.05 0.01"></a-circle>
-          <!-- Sparkles -->
-          <a-sphere color="#FFD700" radius="0.02" position="-0.1 0.1 0.02" 
-            animation="property: scale; to: 1.5 1.5 1.5; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate"></a-sphere>
-        </a-entity>
+    
+    <a-entity 
+      id="butterfly1"
+      gltf-model="#butterfly1Model"
+      position="100 2 -20"
+      scale="350 350 350"
+      rotation="0 180 0">
+        <a-box id="box1" class="clickable" 
+        width="0.15" height="0.15" depth="0.15" 
+        position="0 -0.1 0" 
+        opacity="0">
+        </a-box>
+    </a-entity>
 
-        <!-- Locked Treasure Box -->
-        <a-entity id="box1" class="clickable" position="-0.5 0.3 0" scale="0.15 0.15 0.15">
-          <a-box color="#8B4513" depth="1" height="0.7" width="1"></a-box>
-          <a-box color="#DAA520" depth="1.05" height="0.1" width="1.05" position="0 0.3 0"></a-box>
-          <!-- Lock -->
-          <a-torus color="#FFD700" radius="0.15" radius-tubular="0.03" position="0 0 0.51"></a-torus>
-          <a-cylinder color="#FFD700" height="0.2" radius="0.03" position="0 -0.1 0.51"></a-cylinder>
-        </a-entity>
+    <a-text 
+      id="riddle1"
+      value="A yellow glow that warns the wise,\nTouch with care, and claim the prize."
+      color="pink"
+      visible="false"
+      position="65 1 -80"
+      scale="30 30 30"
+      rotation="-90 0 0"
+      wrap-count="30"
+    ></a-text>
 
-        <!-- Hidden Riddle (appears when butterfly clicked) -->
-        <a-entity id="riddle1" visible="false" position="0 0 0">
-          <a-plane color="#FFF5F5" width="2" height="1" opacity="0.95"></a-plane>
-          <a-text 
-            value="I am the first of three,\nIn gardens where I'm free.\nFind my friend in golden light,\nWho follows sun from left to right." 
-            color="#2C3E50"
-            align="center"
-            width="1.8"
-            position="0 0 0.01"
-            wrap-count="30"
-          ></a-text>
-          <a-text 
-            value="🌻 Seek the YELLOW flowers! 🌻" 
-            color="#F39C12"
-            align="center"
-            width="1.5"
-            position="0 -0.35 0.01"
-            scale="0.7 0.7 0.7"
-          ></a-text>
-        </a-entity>
-
-        <!-- Progress Indicator -->
-        <a-text 
-          id="progress1"
-          value="1/3 Found!" 
-          color="#27AE60"
-          align="center"
-          width="1.5"
-          position="0.5 0.8 0"
-          scale="0.4 0.4 0.4"
-          visible="false"
-        ></a-text>
-
-      </a-entity>
+    <a-text
+      id="progress1"
+      value="1/3"
+      visible="false"
+      position="95 2.5 13"
+      scale="30 30 30"
+      color="white"
+      rotation="-90 0 0"
+    ></a-text>
     </a-nft>
 
-    <!-- ============================================ -->
-    <!-- FLOWER 2: Yellow Flowers with Green Butterfly -->
-    <!-- ============================================ -->
     <a-nft
       type="nft"
-      url="flower2"
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance=".01"
-      smoothThreshold="5"
+      url="./markers/flower2"
       id="flower2-marker"
     >
-      <a-entity id="flower2-content" position="0 0 0">
-        
-        <!-- Main Golden Butterfly -->
-        <a-entity 
-          id="butterfly2"
-          class="clickable"
-          position="0 0.8 0"
-          animation="property: position; to: 0 1.3 0; dur: 2500; easing: easeInOutSine; loop: true; dir: alternate"
-        >
-          <!-- Body -->
-          <a-cylinder color="#FF8C00" height="0.25" radius="0.04"></a-cylinder>
-          <!-- Wings -->
-          <a-triangle color="#FFD700" scale="0.35 0.35 0.35" position="-0.2 0 0" rotation="0 0 20"></a-triangle>
-          <a-triangle color="#FFD700" scale="0.35 0.35 0.35" position="0.2 0 0" rotation="0 0 -20"></a-triangle>
-          <a-circle color="#FFA500" radius="0.08" position="-0.15 0.1 0.01"></a-circle>
-          <a-circle color="#FFA500" radius="0.08" position="0.15 0.1 0.01"></a-circle>
-          <!-- Sun rays -->
-          <a-ring color="#FFFF00" radius-inner="0.2" radius-outer="0.25" position="0 0 -0.02"
-            animation="property: rotation; to: 0 0 360; dur: 5000; easing: linear; loop: true"></a-ring>
-        </a-entity>
-
-        <!-- Small butterflies (appear when main butterfly clicked) -->
-        <a-entity id="small-butterflies" visible="false">
-          <a-entity position="-0.4 0.6 0" animation="property: position; to: -0.6 1 0; dur: 2000; loop: true; dir: alternate">
-            <a-triangle color="#87CEEB" scale="0.15 0.15 0.15"></a-triangle>
-          </a-entity>
-          <a-entity position="0.4 0.6 0" animation="property: position; to: 0.6 1 0; dur: 2000; loop: true; dir: alternate">
-            <a-triangle color="#98FB98" scale="0.15 0.15 0.15"></a-triangle>
-          </a-entity>
-          <a-entity position="0 1 0" animation="property: position; to: 0 1.3 0; dur: 1800; loop: true; dir: alternate">
-            <a-triangle color="#DDA0DD" scale="0.15 0.15 0.15"></a-triangle>
-          </a-entity>
-        </a-entity>
-
-        <!-- Treasure Box Half Open -->
-        <a-entity id="box2" class="clickable" position="-0.5 0.3 0" scale="0.15 0.15 0.15">
-          <a-box color="#8B4513" depth="1" height="0.7" width="1"></a-box>
-          <!-- Lid slightly open -->
-          <a-box color="#DAA520" depth="1.05" height="0.1" width="1.05" position="0 0.4 0" rotation="-30 0 0"></a-box>
-          <!-- Glow inside -->
-          <a-sphere color="#FFD700" radius="0.3" position="0 0.2 0" opacity="0.6"
-            animation="property: opacity; to: 0.9; dur: 1000; loop: true; dir: alternate"></a-sphere>
-        </a-entity>
-
-        <!-- Floating Petals (clickable) -->
-        <a-entity id="petals" visible="true">
-          <a-circle id="petal1" class="clickable" color="#FFEB3B" radius="0.1" position="0.3 0.5 0"
-            animation="property: position; to: 0.3 0.7 0; dur: 2000; loop: true; dir: alternate"></a-circle>
-          <a-circle id="petal2" class="clickable" color="#FDD835" radius="0.08" position="-0.3 0.6 0"
-            animation="property: position; to: -0.3 0.8 0; dur: 1800; loop: true; dir: alternate"></a-circle>
-        </a-entity>
-
-        <!-- Riddle -->
-        <a-entity id="riddle2" visible="false" position="0 0 0">
-          <a-plane color="#FFFEF0" width="2" height="1" opacity="0.95"></a-plane>
-          <a-text 
-            value="Well done, seeker of light!\nNow find beauty in the night.\nPurple dreams and calming scent,\nThe final key shall be sent." 
-            color="#2C3E50"
-            align="center"
-            width="1.8"
-            position="0 0 0.01"
-            wrap-count="28"
-          ></a-text>
-          <a-text 
-            value="🪷 Seek the LOTUS flower! 🪷" 
-            color="#9B59B6"
-            align="center"
-            width="1.5"
-            position="0 -0.35 0.01"
-            scale="0.7 0.7 0.7"
-          ></a-text>
-        </a-entity>
-
-        <a-text 
-          id="progress2"
-          value="2/3 Found!" 
-          color="#F39C12"
-          align="center"
-          width="1.5"
-          position="0.5 0.8 0"
-          scale="0.4 0.4 0.4"
-          visible="false"
-        ></a-text>
-
+      <a-entity 
+      id="butterfly2"
+      gltf-model="#butterfly2Model"
+      position="80 2 -50"
+      scale="5 5 5"
+      rotation="10 135 0"
+      visible="false">
+        <a-box id="box2" class="clickable" 
+        width="9" height="9" depth="9" 
+        position="0 0.2 0" 
+        opacity="0">
+        </a-box>
       </a-entity>
+    
+      <a-text 
+        id="riddle2"
+        value="Follow the trail of purple light, \nA fragrant treasure waits in sight."
+        color="yellow"
+        visible="false"
+        position="105 1 -80"
+        scale="30 30 30"
+        rotation="-90 0 0"
+        wrap-count="30"
+      ></a-text>
+    
+    
+      <a-text
+        id="progress2"
+        value="2/3"
+        visible="false"
+        position="80 2.5 10"
+        scale="30 30 30"
+        color="white"
+        rotation="-90 0 0"
+      ></a-text>
     </a-nft>
 
-    <!-- ============================================ -->
-    <!-- FLOWER 3: Pink Lotus with Dragonfly -->
-    <!-- ============================================ -->
     <a-nft
       type="nft"
-      url="flower3"
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance=".01"
-      smoothThreshold="5"
+      url="./markers/flower3"
       id="flower3-marker"
     >
-      <a-entity id="flower3-content" position="0 0 0">
-        
-        <!-- Three Butterflies United -->
-        <a-entity id="united-butterflies" position="0 1 0"
-          animation="property: rotation; to: 0 360 0; dur: 8000; easing: linear; loop: true">
-          <!-- Pink butterfly -->
-          <a-entity position="0.25 0 0">
-            <a-triangle color="#FF1493" scale="0.2 0.2 0.2" rotation="0 0 30"></a-triangle>
-            <a-circle color="#FFB6C1" radius="0.06" position="0 0.05 0.01"></a-circle>
-          </a-entity>
-          <!-- Gold butterfly -->
-          <a-entity position="-0.25 0 0">
-            <a-triangle color="#FFD700" scale="0.2 0.2 0.2" rotation="0 0 -30"></a-triangle>
-            <a-circle color="#FFA500" radius="0.06" position="0 0.05 0.01"></a-circle>
-          </a-entity>
-          <!-- Purple butterfly -->
-          <a-entity position="0 0.25 0">
-            <a-triangle color="#9B59B6" scale="0.2 0.2 0.2"></a-triangle>
-            <a-circle color="#DDA0DD" radius="0.06" position="0 0.05 0.01"></a-circle>
-          </a-entity>
-          <!-- Center sparkle -->
-          <a-octahedron color="#FFD700" radius="0.08" 
-            animation="property: scale; to: 1.3 1.3 1.3; dur: 1000; loop: true; dir: alternate"></a-octahedron>
-        </a-entity>
-
-        <!-- Open Treasure Chest -->
-        <a-entity id="box3" class="clickable" position="0 0.3 0" scale="0.2 0.2 0.2">
-          <a-box color="#8B4513" depth="1" height="0.7" width="1"></a-box>
-          <!-- Lid fully open -->
-          <a-box color="#DAA520" depth="1.05" height="0.1" width="1.05" position="0 0.6 0.3" rotation="-90 0 0"></a-box>
-          
-          <!-- Magical items floating out -->
-          <a-entity id="treasure-items" visible="false">
-            <a-sphere color="#FF1493" radius="0.15" position="0 0.8 0"
-              animation="property: position; to: 0 1.2 0; dur: 2000; loop: true; dir: alternate"></a-sphere>
-            <a-octahedron color="#FFD700" radius="0.12" position="0.3 0.7 0"
-              animation="property: position; to: 0.3 1.1 0; dur: 1800; loop: true; dir: alternate"
-              animation__rotate="property: rotation; to: 360 360 0; dur: 3000; loop: true"></a-octahedron>
-            <a-torus color="#9B59B6" radius="0.1" radius-tubular="0.03" position="-0.3 0.75 0"
-              animation="property: position; to: -0.3 1.15 0; dur: 2200; loop: true; dir: alternate"></a-torus>
-          </a-entity>
-        </a-entity>
-
-        <!-- Victory Sparkles -->
-        <a-entity id="sparkles" position="0 1.5 0" visible="false">
-          <a-entity animation="property: rotation; to: 0 360 0; dur: 3000; loop: true">
-            <a-sphere color="#FFD700" radius="0.05" position="0.3 0 0"></a-sphere>
-            <a-sphere color="#FF1493" radius="0.05" position="-0.3 0 0"></a-sphere>
-            <a-sphere color="#9B59B6" radius="0.05" position="0 0 0.3"></a-sphere>
-            <a-sphere color="#87CEEB" radius="0.05" position="0 0 -0.3"></a-sphere>
-          </a-entity>
-        </a-entity>
-
-        <!-- Final Poem -->
-        <a-entity id="final-poem" visible="false" position="0 0 0">
-          <a-plane color="#F8F0FF" width="2.5" height="1.5" opacity="0.95"
-            animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 1000; easing: easeOutElastic"></a-plane>
-          <a-text 
-            value="🌸 VICTORY! 🌸\n\nThree butterflies, three flowers bright,\nTogether they restore the light.\nThe garden's magic now restored,\nBy seekers brave, the quest adored.\n\n✨ The Secret Garden Thanks You! ✨" 
-            color="#2C3E50"
-            align="center"
-            width="2.3"
-            position="0 0 0.01"
-            wrap-count="35"
-            line-height="50"
-          ></a-text>
-        </a-entity>
-
-        <!-- Achievement Badge -->
-        <a-entity id="achievement" visible="false" position="0 -0.8 0">
-          <a-ring color="#FFD700" radius-inner="0.2" radius-outer="0.25"
-            animation="property: rotation; to: 0 0 360; dur: 2000; loop: true"></a-ring>
-          <a-text value="MASTER\nGARDENER" color="#FFD700" align="center" width="1" position="0 0 0.01"></a-text>
-        </a-entity>
-
-        <a-text 
-          value="3/3 COMPLETE!" 
-          color="#27AE60"
-          align="center"
-          width="1.5"
-          position="0 1.8 0"
-          scale="0.5 0.5 0.5"
-          animation="property: scale; to: 0.6 0.6 0.6; dur: 500; loop: true; dir: alternate"
-        ></a-text>
-
-      </a-entity>
+    <a-entity 
+    id="butterfly3"
+    gltf-model="#butterfly3Model"
+    position="175 2 -90"
+    scale="9 9 9"
+    rotation="10 135 0"
+    visible="false">
+      <a-box id="box3" class="clickable" 
+      width="5" height="5" depth="5" 
+      position="0 0.2 0" 
+      opacity="0">
+      </a-box>
+    </a-entity>
+  
+    <a-text 
+      id="riddle3"
+      value="Congratulations,\nYour wish awaits the touch of light."
+      color="EAC0FC"
+      visible="false"
+      position="95 1 -20"
+      scale="30 30 30"
+      rotation="-90 0 0"
+      wrap-count="30"
+    ></a-text>
+  
+  
+    <a-text
+      id="progress3"
+      value="3/3"
+      visible="false"
+      position="180 2.5 -35"
+      scale="30 30 30"
+      color="white"
+      rotation="-90 0 0"
+    ></a-text>
     </a-nft>
 
-    <a-entity camera look-controls-enabled="false"></a-entity>
+    <a-entity camera look-controls-enabled="false">
+      <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
+    </a-entity>
+    
   </a-scene>
 
-  <!-- JavaScript for Interactivity -->
   <script>
+    // Suppress WebXR error
+    console.warn = function(msg) { 
+      if (msg.includes && msg.includes('hasLoaded')) return;
+      console.log(msg); 
+    };
+
     // Game state
     let gameState = {
       flower1Found: false,
@@ -422,20 +276,28 @@
       flower3Found: false,
       butterfly1Clicked: false,
       butterfly2Clicked: false,
-      petalsClicked: 0,
       startTime: null
     };
 
     // Wait for scene to load
     document.addEventListener('DOMContentLoaded', function() {
+      // Hide loader after delay
       setTimeout(() => {
         document.querySelector('.arjs-loader').style.display = 'none';
         document.getElementById('hudOverlay').classList.add('show');
       }, 3000);
 
-      // Setup marker listeners
-      setupMarkerListeners();
-      setupClickListeners();
+      // Wait for AR.js to fully initialize
+      const scene = document.querySelector('a-scene');
+      if (scene.hasLoaded) {
+        setupMarkerListeners();
+        setupClickListeners();
+      } else {
+        scene.addEventListener('loaded', () => {
+          setupMarkerListeners();
+          setupClickListeners();
+        });
+      }
     });
 
     function setupMarkerListeners() {
@@ -443,10 +305,13 @@
       const marker1 = document.getElementById('flower1-marker');
       if (marker1) {
         marker1.addEventListener('markerFound', () => {
-          console.log('Flower 1 found!');
+          console.log('✓ Flower 1 marker detected!');
           if (!gameState.startTime) gameState.startTime = Date.now();
           gameState.flower1Found = true;
-          updateHUD('Pink flowers found! Click the butterfly!', '1/3');
+          updateHUD('Pink flowers found! Tap the butterfly!', '1/3');
+        });
+        marker1.addEventListener('markerLost', () => {
+          console.log('✗ Flower 1 marker lost');
         });
       }
 
@@ -454,13 +319,17 @@
       const marker2 = document.getElementById('flower2-marker');
       if (marker2) {
         marker2.addEventListener('markerFound', () => {
-          console.log('Flower 2 found!');
+          console.log('✓ Flower 2 marker detected!');
           if (!gameState.flower1Found) {
             showLockedMessage();
             return;
           }
           gameState.flower2Found = true;
-          updateHUD('Yellow flowers found! Click the butterfly!', '2/3');
+          document.getElementById('butterfly2').setAttribute('visible', true);
+          updateHUD('Yellow flowers found! Tap the butterfly!', '2/3');
+        });
+        marker2.addEventListener('markerLost', () => {
+          console.log('✗ Flower 2 marker lost');
         });
       }
 
@@ -468,115 +337,123 @@
       const marker3 = document.getElementById('flower3-marker');
       if (marker3) {
         marker3.addEventListener('markerFound', () => {
-          console.log('Flower 3 found!');
+          console.log('✓ Flower 3 marker detected!');
           if (!gameState.flower1Found || !gameState.flower2Found) {
             showLockedMessage();
             return;
           }
           gameState.flower3Found = true;
-          updateHUD('LOTUS FOUND! The treasure is yours!', '3/3 COMPLETE!');
+          document.getElementById('butterfly3').setAttribute('visible', true);
+          updateHUD('Magical batterfly found! The wish is yours!', '3/3 COMPLETE!');
           celebrateVictory();
+        });
+        marker3.addEventListener('markerLost', () => {
+          console.log('✗ Flower 3 marker lost');
         });
       }
     }
 
     function setupClickListeners() {
-      // Butterfly 1 - reveals riddle
+      // Use mousedown for better mobile support
       const butterfly1 = document.getElementById('butterfly1');
       if (butterfly1) {
-        butterfly1.addEventListener('click', () => {
-          if (gameState.flower1Found && !gameState.butterfly1Clicked) {
-            gameState.butterfly1Clicked = true;
-            document.getElementById('riddle1').setAttribute('visible', 'true');
-            document.getElementById('progress1').setAttribute('visible', 'true');
-            updateHUD('Riddle revealed! Find the yellow flowers!', '1/3');
-          }
-        });
+        butterfly1.addEventListener('mousedown', handleButterfly1Click);
+        butterfly1.addEventListener('touchstart', handleButterfly1Click);
       }
 
-      // Box 1 - shakes when clicked
+      const butterfly2 = document.getElementById('butterfly2');
+      if (butterfly2) {
+        butterfly2.addEventListener('mousedown', handleButterfly2Click);
+        butterfly2.addEventListener('touchstart', handleButterfly2Click);
+      }
+
+      const butterfly3 = document.getElementById('butterfly3');
+if (butterfly3) {
+    butterfly3.addEventListener('mousedown', handleButterfly3Click);
+    butterfly3.addEventListener('touchstart', handleButterfly3Click);
+}
+
       const box1 = document.getElementById('box1');
       if (box1) {
-        box1.addEventListener('click', () => {
+        box1.addEventListener('mousedown', () => {
           box1.setAttribute('animation', 'property: rotation; to: 5 0 0; dur: 100; dir: alternate; loop: 3');
         });
       }
 
-      // Butterfly 2 - reveals small butterflies
-      const butterfly2 = document.getElementById('butterfly2');
-      if (butterfly2) {
-        butterfly2.addEventListener('click', () => {
-          if (gameState.flower2Found && !gameState.butterfly2Clicked) {
-            gameState.butterfly2Clicked = true;
-            document.getElementById('small-butterflies').setAttribute('visible', 'true');
-            document.getElementById('riddle2').setAttribute('visible', 'true');
-            document.getElementById('progress2').setAttribute('visible', 'true');
-            updateHUD('Butterflies released! Find the lotus!', '2/3');
-          }
-        });
-      }
-
-      // Petals - click to form arrow
-      const petal1 = document.getElementById('petal1');
-      const petal2 = document.getElementById('petal2');
-      if (petal1 && petal2) {
-        petal1.addEventListener('click', () => {
-          gameState.petalsClicked++;
-          petal1.setAttribute('color', '#E91E63');
-          if (gameState.petalsClicked >= 2) {
-            updateHUD('Petals point to the lotus!', '2/3');
-          }
-        });
-        petal2.addEventListener('click', () => {
-          gameState.petalsClicked++;
-          petal2.setAttribute('color', '#E91E63');
-          if (gameState.petalsClicked >= 2) {
-            updateHUD('Petals point to the lotus!', '2/3');
-          }
-        });
-      }
-
-      // Box 2
       const box2 = document.getElementById('box2');
       if (box2) {
-        box2.addEventListener('click', () => {
+        box2.addEventListener('mousedown', () => {
           box2.setAttribute('animation', 'property: rotation; to: 0 10 0; dur: 200; dir: alternate; loop: 2');
         });
       }
 
-      // United butterflies - celebrate
+      const box3 = document.getElementById('box3');
+      if (box3) {
+        box3.addEventListener('mousedown', handleBox3Click);
+        box3.addEventListener('touchstart', handleBox3Click);
+      }
+
       const unitedButterflies = document.getElementById('united-butterflies');
       if (unitedButterflies) {
-        unitedButterflies.addEventListener('click', () => {
+        unitedButterflies.addEventListener('mousedown', () => {
           if (gameState.flower3Found) {
             document.getElementById('sparkles').setAttribute('visible', 'true');
           }
         });
       }
+    }
 
-      // Box 3 - releases treasure
-      const box3 = document.getElementById('box3');
-      if (box3) {
-        box3.addEventListener('click', () => {
-          if (gameState.flower3Found) {
-            document.getElementById('treasure-items').setAttribute('visible', 'true');
-            document.getElementById('final-poem').setAttribute('visible', 'true');
-            document.getElementById('achievement').setAttribute('visible', 'true');
-          }
-        });
+    function handleButterfly1Click(e) {
+      console.log('1 butterfly clicked');
+      e.preventDefault();
+      e.stopPropagation();
+      if (gameState.flower1Found && !gameState.butterfly1Clicked) {
+        gameState.butterfly1Clicked = true;
+        document.getElementById('riddle1').setAttribute('visible', 'true');
+        document.getElementById('progress1').setAttribute('visible', 'true');
+        updateHUD('Riddle revealed! Find the next flowers!', '1/3');
+        console.log('✓ Butterfly 1 clicked - riddle revealed');
       }
     }
+
+    function handleButterfly2Click(e) {
+      console.log('2 butterfly clicked');
+      e.preventDefault();
+      e.stopPropagation();
+      if (gameState.flower2Found && !gameState.butterfly2Clicked) {
+        gameState.butterfly2Clicked = true;
+        document.getElementById('riddle2').setAttribute('visible', 'true');
+        document.getElementById('progress2').setAttribute('visible', 'true');
+        updateHUD('Find the final batterfly to make a wish!', '2/3');
+        console.log('✓ Butterfly 2 clicked');
+      }
+    }
+
+    function handleButterfly3Click(e) {
+    console.log('3 butterfly clicked');
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (gameState.flower3Found && !gameState.butterfly3Clicked) {
+        gameState.butterfly3Clicked = true;
+        document.getElementById('riddle3').setAttribute('visible', 'true');
+        document.getElementById('progress3').setAttribute('visible', 'true');
+        updateHUD('You can make a wish!', '3/3');
+        console.log('✓ Butterfly 3 clicked');
+    }
+}
 
     function celebrateVictory() {
       setTimeout(() => {
         document.getElementById('sparkles').setAttribute('visible', 'true');
         document.getElementById('final-poem').setAttribute('visible', 'true');
-        document.getElementById('achievement').setAttribute('visible', 'true');
       }, 1000);
 
-      const endTime = Date.now();
-      const duration = Math.floor((endTime - gameState.startTime) / 1000);
-      console.log(`Quest completed in ${duration} seconds!`);
+      if (gameState.startTime) {
+        const endTime = Date.now();
+        const duration = Math.floor((endTime - gameState.startTime) / 1000);
+        console.log(`🎉 Quest completed in ${duration} seconds!`);
+      }
     }
 
     function updateHUD(text, progress) {
