@@ -2,14 +2,12 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>The Secret Garden's Lost Butterflies</title>
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <!-- AR.js for A-Frame (marker-based AR) -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-
-  
   
   <style>
     .arjs-loader {
@@ -133,45 +131,45 @@
     </a-assets>
     
     <a-nft 
-    type="nft" 
-    url="./markers/flower1"
-    id="flower1-marker"
-    >
-    
-    <a-entity 
-      id="butterfly1"
-      gltf-model="#butterfly1Model"
-      position="100 2 -20"
-      scale="350 350 350"
-      rotation="0 180 0">
-        <a-box id="box1" class="clickable" 
-        width="0.15" height="0.15" depth="0.15" 
-        position="0 -0.1 0" 
-        opacity="0">
-        </a-box>
-    </a-entity>
+  type="nft" 
+  url="./markers/flower1"
+  id="flower1-marker">
 
-    <a-text 
-      id="riddle1"
-      value="A yellow glow that warns the wise,\nTouch with care, and claim the prize."
-      color="pink"
-      visible="false"
-      position="65 1 -80"
-      scale="30 30 30"
-      rotation="-90 0 0"
-      wrap-count="30"
-    ></a-text>
+  <!-- MODEL -->
+  <a-entity
+    id="butterfly1"
+    gltf-model="#butterfly1Model"
+    position="0 0 0"
+    scale="0.08 0.08 0.08"
+    rotation="0 180 0"
+    visible="true">
 
-    <a-text
-      id="progress1"
-      value="1/3"
-      visible="false"
-      position="95 2.5 13"
-      scale="30 30 30"
-      color="white"
-      rotation="-90 0 0"
-    ></a-text>
-    </a-nft>
+    <!-- CLICK BOX -->
+    <a-box
+      id="box1"
+      class="clickable"
+      width="0.1"
+      height="0.1"
+      depth="0.1"
+      position="0 0.05 0"
+      opacity="0">
+    </a-box>
+
+  </a-entity>
+
+  <!-- TEXT -->
+  <a-text 
+    id="riddle1"
+    value="A yellow glow that warns the wise"
+    color="pink"
+    visible="true"
+    position="0 0 -0.25"
+    scale="0.15 0.15 0.15"
+    rotation="-90 0 0">
+  </a-text>
+
+</a-nft>
+
 
     <a-nft
       type="nft"
