@@ -403,7 +403,7 @@
         marker4.addEventListener('markerFound', () => {
           console.log('✓ Flower 4 marker detected!');
 
-          if (!gameState.flower1Found || !gameState.flower2Found || !gameState.flower3Found) {
+          if (!gameState.flower1Found || !gameState.flower2Found) {
             showLockedMessage();
             return;
           }
