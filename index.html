@@ -314,8 +314,11 @@
       flower1Found: false,
       flower2Found: false,
       flower3Found: false,
+      flower4Found: false,
       butterfly1Clicked: false,
       butterfly2Clicked: false,
+      butterfly3Clicked: false,
+      butterfly4Clicked: false,
       startTime: null
     };
 
@@ -388,7 +391,6 @@
           gameState.flower3Found = true;
           document.getElementById('butterfly3').setAttribute('visible', true);
           updateHUD('Magical batterfly found! The wish is yours!', '3/3 COMPLETE!');
-          celebrateVictory();
         });
         marker3.addEventListener('markerLost', () => {
           console.log('✗ Flower 3 marker lost');
@@ -396,25 +398,25 @@
       }
 
       // Flower 4
-  const marker4 = document.getElementById('flower4-marker');
-  if (marker4) {
-    marker4.addEventListener('markerFound', () => {
-      console.log('✓ Flower 4 marker detected!');
+      const marker4 = document.getElementById('flower4-marker');
+      if (marker4) {
+        marker4.addEventListener('markerFound', () => {
+          console.log('✓ Flower 4 marker detected!');
 
-      if (!gameState.flower1Found || !gameState.flower2Found || !gameState.flower3Found) {
-        showLockedMessage();
-        return;
+          if (!gameState.flower1Found || !gameState.flower2Found || !gameState.flower3Found) {
+            showLockedMessage();
+            return;
+          }
+
+          gameState.flower4Found = true;
+          document.getElementById('butterfly4').setAttribute('visible', true);
+          updateHUD('Final magical butterfly found!', '4/4 COMPLETE!');
+        });
+
+        marker4.addEventListener('markerLost', () => {
+          console.log('✗ Flower 4 marker lost');
+        });
       }
-
-      gameState.flower4Found = true;
-      document.getElementById('butterfly4').setAttribute('visible', true);
-      updateHUD('Final magical butterfly found!', '4/4 COMPLETE!');
-    });
-
-    marker4.addEventListener('markerLost', () => {
-      console.log('✗ Flower 4 marker lost');
-    });
-  }
     }
 
     function setupClickListeners() {
@@ -435,6 +437,12 @@
       if (butterfly3) {
         butterfly3.addEventListener('mousedown', handleButterfly3Click);
         butterfly3.addEventListener('touchstart', handleButterfly3Click);
+      }
+
+      const butterfly4 = document.getElementById('butterfly4');
+      if (butterfly4) {
+        butterfly4.addEventListener('mousedown', handleButterfly4Click);
+        butterfly4.addEventListener('touchstart', handleButterfly4Click);
       }
 
       const box1 = document.getElementById('box1');
@@ -458,6 +466,13 @@
         });
       }
 
+      const box4 = document.getElementById('box4');
+      if (box4) {
+        box4.addEventListener('mousedown', () => {
+          box4.setAttribute('animation', 'property: rotation; to: 0 10 0; dur: 200; dir: alternate; loop: 2');
+        });
+      }
+
       const unitedButterflies = document.getElementById('united-butterflies');
       if (unitedButterflies) {
         unitedButterflies.addEventListener('mousedown', () => {
@@ -466,20 +481,6 @@
           }
         });
       }
-
-      const butterfly4 = document.getElementById('butterfly4');
-if (butterfly4) {
-  butterfly4.addEventListener('mousedown', handleButterfly4Click);
-  butterfly4.addEventListener('touchstart', handleButterfly4Click);
-}
-
-const box4 = document.getElementById('box4');
-if (box4) {
-  box4.addEventListener('mousedown', () => {
-    box4.setAttribute('animation', 'property: rotation; to: 0 10 0; dur: 200; dir: alternate; loop: 2');
-  });
-}
-
     }
 
     function handleButterfly1Click(e) {
@@ -509,44 +510,30 @@ if (box4) {
     }
 
     function handleButterfly3Click(e) {
-    console.log('3 butterfly clicked');
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (gameState.flower3Found && !gameState.butterfly3Clicked) {
-        gameState.butterfly3Clicked = true;
-        document.getElementById('riddle3').setAttribute('visible', 'true');
-        document.getElementById('progress3').setAttribute('visible', 'true');
-        updateHUD('You can make a wish!', '3/3');
-        console.log('✓ Butterfly 3 clicked');
+      console.log('3 butterfly clicked');
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (gameState.flower3Found && !gameState.butterfly3Clicked) {
+          gameState.butterfly3Clicked = true;
+          document.getElementById('riddle3').setAttribute('visible', 'true');
+          document.getElementById('progress3').setAttribute('visible', 'true');
+          updateHUD('You can make a wish!', '3/3');
+          console.log('✓ Butterfly 3 clicked');
+      }
     }
-}
 
-function handleButterfly4Click(e) {
-  console.log('4 butterfly clicked');
-  e.preventDefault();
-  e.stopPropagation();
+    function handleButterfly4Click(e) {
+      console.log('4 butterfly clicked');
+      e.preventDefault();
+      e.stopPropagation();
 
-  if (gameState.flower4Found && !gameState.butterfly4Clicked) {
-    gameState.butterfly4Clicked = true;
-    document.getElementById('riddle4').setAttribute('visible', 'true');
-    document.getElementById('progress4').setAttribute('visible', 'true');
-    updateHUD('Final riddle revealed!', '4/4');
-    console.log('✓ Butterfly 4 clicked');
-  }
-}
-
-
-    function celebrateVictory() {
-      setTimeout(() => {
-        document.getElementById('sparkles').setAttribute('visible', 'true');
-        document.getElementById('final-poem').setAttribute('visible', 'true');
-      }, 1000);
-
-      if (gameState.startTime) {
-        const endTime = Date.now();
-        const duration = Math.floor((endTime - gameState.startTime) / 1000);
-        console.log(`Quest completed in ${duration} seconds!`);
+      if (gameState.flower4Found && !gameState.butterfly4Clicked) {
+        gameState.butterfly4Clicked = true;
+        document.getElementById('riddle4').setAttribute('visible', 'true');
+        document.getElementById('progress4').setAttribute('visible', 'true');
+        updateHUD('Final riddle revealed!', '4/4');
+        console.log('✓ Butterfly 4 clicked');
       }
     }
 
