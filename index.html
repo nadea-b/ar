@@ -253,6 +253,48 @@
       rotation="-90 0 0"
     ></a-text>
     </a-nft>
+    
+    <a-nft
+  type="nft"
+  url="./markers/flower4"
+  id="flower4-marker"
+>
+  <a-entity 
+    id="butterfly4"
+    gltf-model="#butterfly3Model"
+    position="175 2 -90"
+    scale="9 9 9"
+    rotation="10 135 0"
+    visible="false">
+      <a-box id="box4" class="clickable" 
+      width="5" height="5" depth="5" 
+      position="0 0.2 0" 
+      opacity="0">
+      </a-box>
+  </a-entity>
+
+  <a-text 
+    id="riddle4"
+    value="Congratulations,\nYour wish awaits the touch of light."
+    color="EAC0FC"
+    visible="false"
+    position="95 1 -20"
+    scale="30 30 30"
+    rotation="-90 0 0"
+    wrap-count="30"
+  ></a-text>
+
+  <a-text
+    id="progress4"
+    value="4/4"
+    visible="false"
+    position="180 2.5 -35"
+    scale="30 30 30"
+    color="white"
+    rotation="-90 0 0"
+  ></a-text>
+</a-nft>
+
 
     <a-entity camera="fov: 70; near: 0.1; far: 1000">
       <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
@@ -352,6 +394,27 @@
           console.log('✗ Flower 3 marker lost');
         });
       }
+
+      // Flower 4
+  const marker4 = document.getElementById('flower4-marker');
+  if (marker4) {
+    marker4.addEventListener('markerFound', () => {
+      console.log('✓ Flower 4 marker detected!');
+
+      if (!gameState.flower1Found || !gameState.flower2Found || !gameState.flower3Found) {
+        showLockedMessage();
+        return;
+      }
+
+      gameState.flower4Found = true;
+      document.getElementById('butterfly4').setAttribute('visible', true);
+      updateHUD('Final magical butterfly found!', '4/4 COMPLETE!');
+    });
+
+    marker4.addEventListener('markerLost', () => {
+      console.log('✗ Flower 4 marker lost');
+    });
+  }
     }
 
     function setupClickListeners() {
@@ -403,6 +466,20 @@
           }
         });
       }
+
+      const butterfly4 = document.getElementById('butterfly4');
+if (butterfly4) {
+  butterfly4.addEventListener('mousedown', handleButterfly4Click);
+  butterfly4.addEventListener('touchstart', handleButterfly4Click);
+}
+
+const box4 = document.getElementById('box4');
+if (box4) {
+  box4.addEventListener('mousedown', () => {
+    box4.setAttribute('animation', 'property: rotation; to: 0 10 0; dur: 200; dir: alternate; loop: 2');
+  });
+}
+
     }
 
     function handleButterfly1Click(e) {
@@ -444,6 +521,21 @@
         console.log('✓ Butterfly 3 clicked');
     }
 }
+
+function handleButterfly4Click(e) {
+  console.log('4 butterfly clicked');
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (gameState.flower4Found && !gameState.butterfly4Clicked) {
+    gameState.butterfly4Clicked = true;
+    document.getElementById('riddle4').setAttribute('visible', 'true');
+    document.getElementById('progress4').setAttribute('visible', 'true');
+    updateHUD('Final riddle revealed!', '4/4');
+    console.log('✓ Butterfly 4 clicked');
+  }
+}
+
 
     function celebrateVictory() {
       setTimeout(() => {
